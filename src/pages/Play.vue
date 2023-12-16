@@ -102,7 +102,7 @@ watchEffect(() => {
         :key="x"
         :class="getBlockClass(block)"
         flex="~" h-7 w-7 m="0.5" items-center justify-center
-        border="1 gray-100/20"
+        border="1 gray-500/20"
         @click="onClick(block)"
         @contextmenu.prevent="onRightClick(block)"
       >
