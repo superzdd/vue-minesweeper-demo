@@ -181,6 +181,31 @@ export class GameManager {
     // console.log(`blocks width: ${this.blocks[0].length}, height: ${this.blocks.length}`)
   }
 
+  /**
+   * 展开这个格子周围的格子
+   * @param block
+   */
+  public expend(block: BlockState) {
+    if (block.flagged || !block.revealed)
+      return
+
+    this.AroundCirclesBlocks(block).every((s) => {
+      if (!s.revealed) {
+        if (s.mine && s.flagged) {
+          return true
+        }
+        else if (s.mine && !s.flagged) {
+          this.gameState = GameState.LOSE
+          return false
+        }
+
+        this.expendZero(s)
+        s.revealed = true
+      }
+      return true
+    })
+  }
+
   private expendZero(block: BlockState) {
     if (block.adjacentMines)
       return
