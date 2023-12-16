@@ -3,7 +3,7 @@
 import type { BlockState } from '~/composables/blockState'
 import { GameManager } from '~/GameManager'
 
-const selectedDifficulty: ref<'Easy' | 'Normal' | 'Hard'> = ref('Hard')
+const selectedDifficulty: ref<'Easy' | 'Normal' | 'Hard'> = ref('Normal')
 
 const dev = false
 const GM = reactive(new GameManager(selectedDifficulty.value))
@@ -147,7 +147,7 @@ watchEffect(() => {
   <div flex="~" flex-col items-center justify-left>
     <div flex="~" flex-col items-center justify-center p5>
       <template v-if="GM.currentBlock">
-        <!-- <h1>You clicked row: {{ GM.currentBlock.y + 1 }}, column:{{ GM.currentBlock.x + 1 }}</h1> -->
+        <h1>GameState: {{ GM.gameState }}</h1>
         <h2>鼠标左键：翻开格子</h2>
         <h2>鼠标右键：标记地雷</h2>
         <h2>鼠标双击：翻开周边一圈的格子，要确保标记好周围的地雷，否则会引爆哦</h2>

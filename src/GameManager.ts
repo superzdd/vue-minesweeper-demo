@@ -28,7 +28,7 @@ export class GameManager {
     Normal: {
       width: 10,
       height: 10,
-      mineCount: 20,
+      mineCount: 17,
     },
     Hard: {
       width: 15,
@@ -204,6 +204,8 @@ export class GameManager {
       }
       return true
     })
+
+    this.checkGameState()
   }
 
   private expendZero(block: BlockState) {
@@ -221,7 +223,7 @@ export class GameManager {
   private checkGameState() {
     if (!this.mineGenerated || !this.blocks)
       this.gameState = GameState.DNP
-    else
+    else if (this.gameState === GameState.DNP)
       this.gameState = GameState.PLAYING
 
     const blocks = this.blocks.flat()
