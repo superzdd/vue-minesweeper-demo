@@ -1,6 +1,6 @@
 <!-- eslint-disable no-alert -->
 <script setup lang="ts" generic="T extends any, O extends any">
-import type { BlockState } from '~/types'
+import type { BlockState } from '~/composables/blockState'
 
 const WIDTH = 10
 const HEIGHT = 10
@@ -224,3 +224,5 @@ watchEffect(checkGameState)
     </p>
   </div>
 </template>
+~/composables/types
+~/composables/blockState
