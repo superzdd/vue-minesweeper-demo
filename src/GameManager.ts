@@ -19,10 +19,10 @@ export class GameManager {
     [1, 1],
   ]
 
-  private CONFIG_DIFFICULTY_LEVELS: DifficultyLevelConfig = {
+  public CONFIG_DIFFICULTY_LEVELS: DifficultyLevelConfig = {
     Easy: {
-      width: 5,
-      height: 5,
+      width: 7,
+      height: 7,
       mineCount: 5,
     },
     Normal: {
@@ -31,17 +31,15 @@ export class GameManager {
       mineCount: 17,
     },
     Hard: {
-      width: 15,
-      height: 15,
-      mineCount: 30,
+      width: 20,
+      height: 20,
+      mineCount: 45,
     },
   }
 
   public current_diff_config!: GameBoard
 
   public constructor(difficulty: 'Easy' | 'Normal' | 'Hard') {
-    // this.width = this.CONFIG_DIFFICULTY_LEVELS[difficulty].width
-    // this.height = this.CONFIG_DIFFICULTY_LEVELS[difficulty].height
     this.current_diff_config = this.CONFIG_DIFFICULTY_LEVELS[difficulty]
     this.blocks = this.initArrays()
   }
@@ -172,13 +170,9 @@ export class GameManager {
   }
 
   public updateConfig(difficulty: 'Easy' | 'Normal' | 'Hard') {
-    // this.width = this.CONFIG_DIFFICULTY_LEVELS[difficulty].width
-    // this.height = this.CONFIG_DIFFICULTY_LEVELS[difficulty].height
     this.current_diff_config = this.CONFIG_DIFFICULTY_LEVELS[difficulty]
     this.blocks = this.initArrays()
     this.gameReset()
-    // console.log(`config change complete, all blocks inited:`)
-    // console.log(`blocks width: ${this.blocks[0].length}, height: ${this.blocks.length}`)
   }
 
   /**
@@ -190,18 +184,22 @@ export class GameManager {
       return
 
     this.AroundCirclesBlocks(block).every((s) => {
-      if (!s.revealed) {
-        if (s.mine && s.flagged) {
-          return true
-        }
-        else if (s.mine && !s.flagged) {
-          this.gameState = GameState.LOSE
-          return false
-        }
+      // 先判断格子本身的状态，以下几个状态会直接判定游戏失败：
+      // - 格子为地雷且未被标记
+      // - 格子为数字但被标记为地雷
+      // 如果判断成功，则翻开格子，再进行0地雷展开
 
-        this.expendZero(s)
-        s.revealed = true
+      if (!s.flagged && s.mine) {
+        this.gameState = GameState.LOSE
+        return false
       }
+      else if (s.flagged && !s.mine) {
+        this.gameState = GameState.LOSE
+        return false
+      }
+      if (!s.mine)
+        this.expendZero(s)
+      s.revealed = true
       return true
     })
 

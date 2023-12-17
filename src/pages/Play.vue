@@ -3,29 +3,34 @@
 import type { BlockState } from '~/composables/blockState'
 import { GameManager } from '~/GameManager'
 
-const selectedDifficulty: ref<'Easy' | 'Normal' | 'Hard'> = ref('Normal')
+const dictChnDifficulty = {
+  Easy: '简单',
+  Normal: '普通',
+  Hard: '困难',
+}
+
+const selectedDifficulty: ref<'Easy' | 'Normal' | 'Hard'> = ref('Hard')
 
 const dev = false
 const GM = reactive(new GameManager(selectedDifficulty.value))
-// let allBlocks = GM.blocks
 
-const totalMines = computed(() => {
-  let sum = 0
+// const totalMines = computed(() => {
+//   let sum = 0
 
-  for (const row of GM.blocks) {
-    for (const item of row) {
-      if (item.mine)
-        sum++
-    }
-  }
+//   for (const row of GM.blocks) {
+//     for (const item of row) {
+//       if (item.mine)
+//         sum++
+//     }
+//   }
 
-  return sum
-})
-
-// const flaggedCount = computed(() => {
-//   const blocks = GM.blocks.flat() as BlockState[]
-//   return blocks.filter(e => e.flagged).length
+//   return sum
 // })
+
+const flaggedCount = computed(() => {
+  const blocks = GM.blocks.flat() as BlockState[]
+  return blocks.filter(e => e.flagged).length
+})
 
 const numberColors = [
   'text-transparent',
@@ -61,8 +66,6 @@ function onRightClick(block: BlockState) {
 }
 
 function onDBLClick(block: BlockState) {
-  // console.log(`------double click-------`)
-  // console.log(`row: ${block.x} col: ${block.y}`)
   GM.expend(block)
 }
 
@@ -85,9 +88,7 @@ watchEffect(() => {
 })
 
 watchEffect(() => {
-  // console.log(`config change: ${selectedDifficulty.value}`)
   GM.updateConfig(selectedDifficulty.value)
-  // console.log(`allBlocks width: ${GM.blocks[0].length}, height: ${GM.blocks.length}`)
 })
 </script>
 
@@ -96,9 +97,9 @@ watchEffect(() => {
     来一局扫雷！
   </h2>
   <div flex="~" m="1" items-center justify-center>
-    <select id="selDifffcult" v-model="selectedDifficulty" name="sel" h-8 w-16 border-rd>
-      <option v-for="x in ['Easy', 'Normal', 'Hard']" :key="x" :value="x">
-        {{ x }}
+    <select id="selDifffcult" v-model="selectedDifficulty" name="sel" h-8 w-40 border-rd border="1 gray-500/20">
+      <option v-for="x in Object.keys(dictChnDifficulty)" :key="x" :value="x">
+        {{ `地雷: ${GM.CONFIG_DIFFICULTY_LEVELS[x].mineCount}` }}
       </option>
     </select>
     <button flex="~" ml h-8 w-16 items-center justify-center border-rd bg-green-500 @click="onResetClick()">
@@ -109,12 +110,10 @@ watchEffect(() => {
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88ZM80 108a12 12 0 1 1 12 12a12 12 0 0 1-12-12Zm96 0a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm-1.08 64a8 8 0 1 1-13.84 8c-7.47-12.91-19.21-20-33.08-20s-25.61 7.1-33.08 20a8 8 0 1 1-13.84-8c10.29-17.79 27.39-28 46.92-28s36.63 10.2 46.92 28Z" /></svg>
       </template>
       <template v-else>
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path fill="currentColor" d="M176 112h-24a8 8 0 0 1 0-16h24a8 8 0 0 1 0 16Zm-72-16h-8v-8a8 8 0 0 0-16 0v8h-8a8 8 0 0 0 0 16h8v8a8 8 0 0 0 16 0v-8h8a8 8 0 0 0 0-16Zm137.48 104.65a36 36 0 0 1-54.94 4.81c-.12-.12-.24-.24-.35-.37L146.48 160h-37l-39.67 45.09l-.35.37A36.08 36.08 0 0 1 44 216a36 36 0 0 1-35.44-42.25a.68.68 0 0 1 0-.14l16.37-84.09A59.88 59.88 0 0 1 83.89 40H172a60.08 60.08 0 0 1 59 49.25v.18l16.37 84.17a.68.68 0 0 1 0 .14a35.74 35.74 0 0 1-5.89 26.91ZM172 144a44 44 0 0 0 0-88H83.89a43.9 43.9 0 0 0-43.21 36.37v.13L24.3 176.59A20 20 0 0 0 58 194.3l41.92-47.59a8 8 0 0 1 6-2.71Zm59.7 32.59l-8.74-45A60 60 0 0 1 172 160h-4.2l30.2 34.31a20.09 20.09 0 0 0 17.46 5.39a20 20 0 0 0 16.23-23.11Z" /></svg>
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path fill="currentColor" d="M176 112h-24a8 8 0 0 1 0-16h24a8 8 0 0 1 0 16Zm-72-16h-8v-8a8 8 0 0 0-16 0v8h-8a8 8 0 0 0 0 16h8v8a8 8 0 0 0 16 0v-8h8a8 8 0 0 0 0-16Zm137.48 104.65a36 36 0 0 1-54.94 4.81c-.12-.12-.24-.24-.35-.37L146.48 160h-37l-39.67 45.09l-.35.37A36.08 36.08 0 0 1 44 216a36 36 0 0 1-35.44-42.25a.68.68 0 0 1 0-.14l16.37-84.09A59.88 59.88 0 0 1 83.89 40H172a60.08 60.08 0 0 1 59 49.25v.18l16.37 84.17a.68.68 0 0 1 0 .14a35.74 35.74 0 0 1-5.89 26.91ZM172 144a44 44 0 0 0 0-88H83.89a43.9 43.9 0 0 0-43.21 36.37v.13L24.3 176.59A20 20 0 0 0 58 194.3l41.92-47.59a8 8 0 0 1 6-2.71Zm59.7 32.59l-8.74-45A60 60 0 0 1 172 160h-4.2l30.2 34.31a20.09 20.09 0 0 0 17.46 5.39a20 20 0 0 0 16.23-23.11Z" /></svg> -->
+        重置
       </template>
     </button>
-  </div>
-  <div>
-    <h2>Total Mine:{{ totalMines }}</h2>
   </div>
   <div p5>
     <div v-for="row, y in GM.blocks" :key="y" flex="~" items-center justify-center>
@@ -129,7 +128,10 @@ watchEffect(() => {
         @dblclick="onDBLClick(block)"
       >
         <template v-if="block.flagged">
-          <div text-red>
+          <div v-if="!block.mine && GM.gameState === GameState.LOSE && block.revealed" text-red>
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M20 20L4 4m16 0L4 20" /></svg>
+          </div>
+          <div v-else text-red>
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6 20.5V5h7.192l.4 2H19v8h-5.192l-.4-2H7v7.5H6Z" /></svg>
           </div>
         </template>
@@ -145,16 +147,13 @@ watchEffect(() => {
     </div>
   </div>
   <div flex="~" flex-col items-center justify-left>
-    <div flex="~" flex-col items-center justify-center p5>
-      <template v-if="GM.currentBlock">
-        <h1>GameState: {{ GM.gameState }}</h1>
-        <h2>鼠标左键：翻开格子</h2>
-        <h2>鼠标右键：标记地雷</h2>
-        <h2>鼠标双击：翻开周边一圈的格子，要确保标记好周围的地雷，否则会引爆哦</h2>
-      </template>
-      <p v-else>
-        Please click one block to start game. Enjoy~
-      </p>
+    <div flex="~" flex-col items-center justify-left p5>
+      <h1>GameState: {{ GM.gameState }}</h1>
+      <h2>{{ flaggedCount }}</h2>
+      <h1>游戏提示：</h1>
+      <h2>鼠标左键：翻开格子</h2>
+      <h2>鼠标右键：标记地雷</h2>
+      <h2>鼠标双击：翻开周边一圈的格子，要确保标记好周围的地雷，否则会引爆哦</h2>
     </div>
   </div>
 </template>
