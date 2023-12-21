@@ -3,6 +3,11 @@
 扫雷小游戏
 
 - 基于 Vue3|TypeScript|[Vitesse Lite](https://github.com/antfu/vitesse-lite)
+
+```bash
+degit antfu/vitesse vue-minisweeper-demo
+```
+
 - node版本 v20.10.0
 
 ## 项目构建
